@@ -35,7 +35,7 @@ mainbody <- div(tabItems(
   
   HTML('<p><div align = "center"><table cellpadding="0" cellspacing="0"><tr><td><img src="images/measure1.jpg" width="300" height="200" ></td><td><img src="images/cont_table.png" width="300" height="200"></td><td><img src="images/measure2.gif" width="300" height="200"></td></tr></table></div></p>'),
   
-  HTML('<p align="justify"> All source codes are in <a href="https://github.com/AhuDurmuscelebi/2x2-A-Comprehensive-Calculator-for-Two-Way-Contingency-Tables" target="_blank"><b>GitHub</b></a>. 
+  HTML('<p align="justify"> All source codes are in <a href="https://github.com/gokmenzararsiz/2x2" target="_blank"><b>GitHub</b></a>. 
        Please see the <a href="help/help.html" target="_blank"> <b>help page</b></a> for more detailed information.</p>')
   ),
 
