@@ -29,7 +29,7 @@ Diagnostic Measures:Sensitivity, Sensitivity of a random test, Quality index of 
 
 Association Measures:Dice's Index (Czekanowski-Sorenson), Yules Q (Gamma), Equitable Threatscore (Gilbert Skill Score), Phi, Contingency Coefficient, Goodman and Kruskal Gamma, Scotts agreement index, Tetrachoric Correlation, Goodman & Kruskals tau (Crit. dep.), Lambda (Symmetric), Lambda (Criterion_dep.), Uncertainty Coefficient (Symmetric), Uncertainty Coeff. (Criterion_dep.)
 
-Agreement: Cohen's Kappa, Observed Agreement, Chance Agreement, Positive Agreement, Negative Agreement, Byrt's Bias Index, Byrt's Prevalence Asymmetry Index, Bias Adjusted Kappa, Prevalence & Bias Adjusted Kappa
+Agreement Measures: Cohen's Kappa, Observed Agreement, Chance Agreement, Positive Agreement, Negative Agreement, Byrt's Bias Index, Byrt's Prevalence Asymmetry Index, Bias Adjusted Kappa, Prevalence & Bias Adjusted Kappa
 
 Statistics and Hypothesis Tests:Pearson Chi-Square Analysis, Pearson Chi-Square Analysis with Yate's correction (Continuity Correction), Likelihood Ratio Chi Square, Minimum Expected Frequency, Cells with Expected Frequency less than 5, Cells with Expected Frequency less than 1, McNemar's Test, McNemar's Test with Yate's correction
 
@@ -44,11 +44,11 @@ output:
 ---
 ## Analysis
 
-### 1.Choice-1
+### 1.Table Input
 
-When the users enter values of 'true pozitive (TP)', 'true negative (TN)', 'false pozitive (FP)' and 'false negative (FN)' and confidence interval (percentage) in cell 4 of the 2x2 table, the program automatically calculates statistical values on the right side of the screen.
+When the users enter values of 'true positive (TP)', 'true negative (TN)', 'false positive (FP)' and 'false negative (FN)' and confidence interval (percentage) in cell 4 of the 2x2 table, the program automatically calculates statistical values on the right side of the screen.
 
-### 1.Choice-2
+### 1.File Input
 
 Users can directly upload their datasets directly to the program instead of entering the values in cell 4 of the 2x2 table. To do this, you need to check the box "Please check if you want to use the sample dataset or enter your own data". This tool requires a dataset in `* .txt` format, which is seperated by` comma`, `semicolon`,` space` or `tab` delimiter. First row of dataset must include header. When the appropriate file is uploaded, the dataset will appear immediately on the main page of the tool (on the 'data' tab). Alternatively users can upload one of the datasets provided within the tool for testing and understanding the operating logic of the tool. 
 
@@ -64,7 +64,7 @@ Each row has columns 'Estimate', 'Estimate Percent' and confidence intervals for
 
 <img src="images/resim3.jpg" alt="Outputs" align="middle" style="width:800px; height:200px;"/>
 
-Beneath each measure group, a line graph and a box graph (together with the confidence intervals) are given, with the dimensions of that group. These graphics can be downloaded when requested.
+Beneath each measure group, a line graph and a box graph 'together with the confidence intervals' are given, with the dimensions of that group. These graphics can be downloaded when requested.
 
 <img src="images/resim4.jpg" alt="Outputs" align="middle" style="width:800px; height:200px;"/>
 

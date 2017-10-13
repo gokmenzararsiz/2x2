@@ -23,9 +23,19 @@ inputs
 mainbody <- div(tabItems(
   tabItem(tabName = "About",
           h4(tags$b('2x2: A Comprehensive Calculator for Two-Way Contingency Tables')),
-          HTML('<p align="justify"> <b> Definition: </b> A 2x2 or contingency table categorizes study subjects for many purposes.  In outbreak investigations and other studies, the categorization is often based on disease and exposure status. </p>'),
+          HTML('<p align="justify"> <b> Definition: </b> 
+Most of the researches in the health field require 2x2 cross tables to perform categorical data analysis. 
+               With these tables for solving a large number of problems such as investigating the performance of diagnostic tests 
+               to determine the presence or absence of a disease, making risk estimates in terms of variables thought to be of 
+               interest to diseases, investigating the cause-and-effect relationship between two clinical variables in two categories,
+               investigating the compatibility between two evaluators, evaluating the performance of classification methods, 
+               calculating distance-similarity measures  can be done statistical calculations. Although there are a lot of software 
+               to do calculations with 2x2 tables in literature, these software have been developed for the solution of certain problems 
+               and make a limited number of calculations. In this program, it is aimed to develop a comprehensive web software which 
+               is able to calculate the necessary statistics for solving a large number of problems and has the ability to interpret 
+               the calculated measures which are not found in any software related to the subject, and which is easily accessible and 
+               usable.This tool includes analysis procedures for 2x2 contingency table. Each procedure includes following features: </p>'),
           
-  HTML('<p align="justify"> This tool includes analysis procedures for 2x2 contingency table. Each procedure includes following features: </p>'),        
   HTML('<p align="justify"> <b> Diagnostic Measures:</b>Sensitivity, Sensitivity of a random test, Quality index of sensitivity...</p>'),
   HTML('<p align="justify"> <b> Association Measures:</b>Dice\'s Index (Czekanowski-Sorenson), Yules Q (Gamma)...</p>'),
   HTML('<p align="justify"> <b> Agreement Measures:</b> Cohen\'s Kappa, Observed Agreement, Chance Agreement...</p>'),
@@ -35,13 +45,13 @@ mainbody <- div(tabItems(
   
   HTML('<p><div align = "center"><table cellpadding="0" cellspacing="0"><tr><td><img src="images/measure1.jpg" width="300" height="200" ></td><td><img src="images/cont_table.png" width="300" height="200"></td><td><img src="images/measure2.gif" width="300" height="200"></td></tr></table></div></p>'),
   
-  HTML('<p align="justify"> All source codes are in <a href="https://github.com/gokmenzararsiz/2x2" target="_blank"><b>GitHub</b></a>. 
+  HTML('<p align="justify"> All source codes are in <a href="https://github.com/gokmenzararsiz/2x2 " target="_blank"><b>GitHub</b></a>. 
        Please see the <a href="help/help.html" target="_blank"> <b>help page</b></a> for more detailed information.</p>')
   ),
 
 tabItem(tabName = "Analysis", fluidRow( column(width=3,
                                                tabBox(width = 12,
-                                                  tabPanel(title = '1.choce:', '\n', '2x2 Table Cells',solidHeader = T,status = 'primary',
+                                                  tabPanel(title = 'Table Input:', '\n', '2x2 Table Cells',solidHeader = T,status = 'primary',
                                                    label = 'View Data',
                                                    fluidRow (column(4, h5("True Positive:")),
                                                              column(4, textInput("text1", label = "", value = "44"))),
@@ -56,14 +66,18 @@ tabItem(tabName = "Analysis", fluidRow( column(width=3,
                                                    
                                                    
                                                ),
-                                               tabPanel(title = '2.choce:', '\n', 'Data Upload',solidHeader = T,status = 'primary',
+                                               tabPanel(title = 'File Input:', '\n', 'Data Upload',solidHeader = T,status = 'primary',
                                                         label = 'View Data2',
                                                checkboxInput("verigir_kontrol","Please check if you want to use the sample dataset or enter your own data",
                                                              FALSE),
                                                radioButtons("dataInput", "", list("Upload a file" = 2, "Load example data" = 1), selected=NULL),
+                                               ## Lachman data https://www.researchgate.net/profile/William_Robertson/publication/51618260_Reliability_and_Diagnostic_Accuracy_of_the_Lachman_Test_Performed_in_a_Prone_Position/links/569987c308ae748dfaff825b.pdf
+                                               ## Lachman data https://joannabriggs.org/assets/docs/sumari/Reviewers-Manual_The-systematic-review-of-studies-of-diagnostic-test-accuracy.pdf
+                                               ##   https://mysite.du.edu/~jcalvert/econ/twobytwo.htm
+                                               ##   https://books.google.com.tr/books?id=RiDCAgAAQBAJ&pg=PA270&dq=Langley+cholera+inoculation+study+818+people&hl=tr&sa=X&ved=0ahUKEwi-4YXL9ObWAhWqDcAKHSbnB4AQ6AEIJjAA#v=onepage&q=Langley%20cholera%20inoculation%20study%20818%20people&f=false
                                                conditionalPanel(condition="input.dataInput=='1'",
                                                                 h5("Load example data:"),
-                                                                radioButtons("sampleData", "", list("Example data 1"=1, "Example data 2"=2), selected=1)
+                                                                radioButtons("sampleData", "", list("Lachman data"=1, "Cholera data"=2), selected=1)
                                                ),
                                                conditionalPanel(condition="input.dataInput=='2'",
                                                                 h5("Upload a delimited text file: "),
@@ -147,8 +161,8 @@ ui <- bootstrapPage(useShinyjs(),
 server <- function(input, output, session) {
   output$menu <- renderUI({
     sidebarMenu(
-      menuItem("About", tabName="About", icon = icon("book")),
-      menuItem("Analysis", tabName="Analysis", icon = icon("calculator"), selected=TRUE),
+      menuItem("About", tabName="About", icon = icon("info-circle")),
+      menuItem("Analysis", tabName="Analysis", icon = icon("th-large"), selected=TRUE),
       menuItem("Authors & News", tabName="Authors", icon = icon("group"))
     )
   })
@@ -162,13 +176,13 @@ server <- function(input, output, session) {
       
       if(input$sampleData == 1){
         
-        data <- read.table("Example1.txt", header=TRUE, sep = "\t")
+        data <- read.table("Lachman_data.txt", header=TRUE, sep = "\t")
         
       }
       
       else if(input$sampleData == 2){
         
-        data <- read.table("Example2.txt", header=TRUE, sep = "\t")
+        data <- read.table("Cholera_data.txt", header=TRUE, sep = "\t")
         
       }
     }
@@ -329,13 +343,23 @@ server <- function(input, output, session) {
       false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
       false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
       false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+      ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_omission_rate = FN/(sutuntop2)
+      false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+      false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+      false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+      ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_discovery_rate = FP/(sutuntop1)
+      false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+      false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+      false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
       ## Dogru pozitif orani
       true_positiverate = TP / (satirtop1)
       ## Yanlis siniflandirma orani
       misclassification_rate = (FN + FP) / toplam
       misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
       misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
       ## Prevelans
       prevalence = (satirtop1 / toplam)
       prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -589,6 +613,8 @@ server <- function(input, output, session) {
       uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
       uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
       uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+      ## Yule s Y (Coefficient of colligation)
+      yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
       ## Pearson ki-kare
       pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
       pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -681,6 +707,10 @@ server <- function(input, output, session) {
       verim <- rbind(verim,newRow)
       newRow  <- data.frame(Estimate = format(round(false_negativerate, digit =3),nsmall=3),  EstimatePercent = percent(round(false_negativerate, digit=3)), LowerCI = format(round(false_negativerate_low, digit =3),nsmall=3), UpperCI = format(round(false_negativerate_upp, digit =3),nsmall=3))
       verim <- rbind(verim,newRow)
+      newRow  <- data.frame(Estimate = format(round(false_omission_rate, digit =3),nsmall=3),  EstimatePercent = percent(round(false_omission_rate, digit=3)), LowerCI = format(round(false_omission_rate_low, digit =3),nsmall=3), UpperCI = format(round(false_omission_rate_upp, digit =3),nsmall=3))
+      verim <- rbind(verim,newRow)
+      newRow  <- data.frame(Estimate = format(round(false_discovery_rate, digit =3),nsmall=3),  EstimatePercent = percent(round(false_discovery_rate, digit=3)), LowerCI = format(round(false_discovery_rate_low, digit =3),nsmall=3), UpperCI = format(round(false_discovery_rate_upp, digit =3),nsmall=3))
+      verim <- rbind(verim,newRow)
       newRow <- data.frame(Estimate = format(round(misclassification_rate, digit =3),nsmall=3),  EstimatePercent = percent(round(misclassification_rate, digit=3)), LowerCI = format(round(misclassification_rate_low, digit =3),nsmall=3), UpperCI = format(round(misclassification_rate_upp, digit =3),nsmall=3))
       verim <- rbind(verim,newRow)
       newRow <- data.frame(Estimate = format(round(rand_index, digit =3),nsmall=3), EstimatePercent = percent(round(rand_index, digit=3)), LowerCI = NA, UpperCI = NA)
@@ -730,12 +760,12 @@ server <- function(input, output, session) {
       rownames(verim) = c("Sensitivity (True Positive Rate)", "Sensitivity of a random test", "Quality index of sensitivity", 
                           "Specificity (True Negative Rate)"
                           , "Specificity of a random test",
-                          "Quality index of specificity","Gain in Certainty", "Efficiency (Accuracy - Correct classification rate -  Overall Fraction Correct)", "Efficiency of a random test", 
+                          "Quality index of specificity","Gain in Certainty (Overall Accuracy)", "Efficiency (Accuracy - Correct classification rate -  Overall Fraction Correct)", "Efficiency of a random test", 
                           "Quality index", "Youden\'s index", "Number Needed to Diagnose", "Number Needed to Misdiagnose",
-                          "Predictive value of positive test","Pred. value of a positive random test", "Predictive value of negative test",
-                          "Pred. value of a negative random test","Predictive Summary Index (PSI)", "False positive rate",
-                          "False negative rate",
-                          "Misclassification rate (Error classification rate)", "Rand Index (Rand Measure)", 
+                          "Predictive value of positive test (PPV)","Pred. value of a positive random test", "Predictive value of negative test (NPV)",
+                          "Pred. value of a negative random test","Predictive Summary Index (PSI)", "False positive rate (FPR)",
+                          "False negative rate (FNR)", "False Omission Rate (FOR)", "False Discovery Rate (FDR)",
+                          "Misclassification rate (Error classification rate - Proportion Incorrectly Classified)", "Rand Index (Rand Measure)", 
                           "Balanced Accuracy (Average Accuracy)", "Lift (Interest)",  "Precision", "Recall","E-Measure","Conviction",
                           "Leverage", "Discriminant Power","F1 Score (F Measure)",
                           "Matthew\'s Correlation Coefficient","Entropy for true", "Entropy for False",
@@ -854,7 +884,7 @@ The specificity of the test indicates that what is not sick is actually classifi
               
       )}
 
-    else if (rownames(DataRow()) == 'Gain in Certainty') 
+    else if (rownames(DataRow()) == 'Gain in Certainty (Overall Accuracy)') 
     {
       degeff = ' '
       if (as.numeric(as.character(DataRow()$Estimate)) == 1)
@@ -974,7 +1004,7 @@ Accuracy is the ratio of actual results (true positive or true negative) among s
               
       )}
 
-    else if (rownames(DataRow()) == 'Predictive value of positive test') 
+    else if (rownames(DataRow()) == 'Predictive value of positive test (PPV)') 
     {
       bsModal("modalExample", paste0("Predictive Value of Positive Test"), "", size = "large",
               h4("Description:"),
@@ -994,7 +1024,7 @@ It is possible that someone who is positive for the test result is sick. ")),
               
       )}
 
-    else if (rownames(DataRow()) == 'Predictive value of negative test') 
+    else if (rownames(DataRow()) == 'Predictive value of negative test (NPV)') 
     {
       bsModal("modalExample", paste0("Predictive Value of Negative Test"), "", size = "large",
               h4("Description:"),
@@ -1012,7 +1042,7 @@ The predictive value of negative test of the test result indicates the likelihoo
     
               
               )}
-    else if (rownames(DataRow()) == 'False positive rate') 
+    else if (rownames(DataRow()) == 'False positive rate (FPR)') 
     {
       bsModal("modalExample", paste0("False Positive Rate"), "", size = "large",
               h4("Description:"),              
@@ -1030,7 +1060,7 @@ The predictive value of negative test of the test result indicates the likelihoo
               
               
               )}
-    else if (rownames(DataRow()) == 'False negative rate') 
+    else if (rownames(DataRow()) == 'False negative rate (FNR)') 
     {
       bsModal("modalExample", paste0("False Negative Rate"), "", size = "large",
               h4("Description:"),              
@@ -1057,7 +1087,7 @@ The predictive value of negative test of the test result indicates the likelihoo
       else 
       {degeff = 'closer to 1, so it is a very good score.'
       }
-      bsModal("modalExample", paste0("Misclassification rate (Error classification rate)"), "", size = "large",
+      bsModal("modalExample", paste0("Misclassification rate (Error classification rate - Proportion Incorrectly Classified)"), "", size = "large",
               h4("Description:"),              
               print(paste0("The misclassification rate is the proportion of those individuals incorrectly categorized by the test 
                            (those with disease who had a negative test plus those without disease who had a positive test result). This measures the portion of all decisions that were incorrect decisions. 
@@ -1370,13 +1400,23 @@ A coefficient of +1 represents a perfect prediction,
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -1630,6 +1670,8 @@ A coefficient of +1 represents a perfect prediction,
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -2036,13 +2078,23 @@ A coefficient of +1 represents a perfect prediction,
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -2296,6 +2348,8 @@ A coefficient of +1 represents a perfect prediction,
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -2707,13 +2761,23 @@ A coefficient of +1 represents a perfect prediction,
       false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
       false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
       false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+      ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_omission_rate = FN/(sutuntop2)
+      false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+      false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+      false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+      ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_discovery_rate = FP/(sutuntop1)
+      false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+      false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+      false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
       ## Dogru pozitif orani
       true_positiverate = TP / (satirtop1)
       ## Yanlis siniflandirma orani
       misclassification_rate = (FN + FP) / toplam
       misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
       misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
       ## Prevelans
       prevalence = (satirtop1 / toplam)
       prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -2967,6 +3031,8 @@ A coefficient of +1 represents a perfect prediction,
       uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
       uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
       uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+      ## Yule s Y (Coefficient of colligation)
+      yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
       ## Pearson ki-kare
       pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
       pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -3061,13 +3127,15 @@ A coefficient of +1 represents a perfect prediction,
       verim <- rbind(verim,newRow)
       newRow <- data.frame(Estimate = format(round(uncertainty_coeff_crit_2, digit =3),nsmall=3),EstimatePercent = percent(round(uncertainty_coeff_crit_2, digit =3)),  LowerCI = format(round(uncertainty_coeff_crit_low_2, digit =3),nsmall=3), UpperCI = format(round(uncertainty_coeff_crit_upp_2, digit =3),nsmall=3))
       verim <- rbind(verim,newRow)
+      newRow <- data.frame(Estimate = format(round(yule_y, digit =3),nsmall=3),EstimatePercent = percent(round(yule_y, digit =3)),  LowerCI = NA, UpperCI = NA)
+      verim <- rbind(verim,newRow)
       
       rownames(verim) = c("Dice\'s Index (Czekanowski-Sorenson)", "Yules Q (Gamma)", "Cramer\'s V","Equitable Threatscore (Gilbert Skill Score)", "Phi", "Contingency Coefficient", 
                           "Goodman & Kruskal Gamma (Gamma Statistic-Gamma Coefficient)","Kendall\'s Tau-a" ,"Kendall\'s Tau-b" ,"Kendall\'s (Stuart\'s) Tau-c" , 
                           "Somers\' Delta (Somers\' d) R|C", "Somers\' Delta (Somers\' d) C|R",
                           "Scotts agreement index", "Tetrachoric (Polychoric) Correlation", "Goodman & Kruskals tau (Crit. dep.)", 
                           "Lambda Symmetric", "Lambda Asymmetric R|C","Lambda Asymmetric C|R" ,"Uncertainty Coefficient (Theil\'s U) Symmetric ", 
-                          "Uncertainty Coefficient (Theil\'s U) R|C ", "Uncertainty Coefficient (Theil\'s U) C|R")
+                          "Uncertainty Coefficient (Theil\'s U) R|C ", "Uncertainty Coefficient (Theil\'s U) C|R", "Yule\'s Y (Coefficient of Colligation)")
       
       
       return(verim[,c(1,2,3,4)])
@@ -3690,6 +3758,28 @@ ln(P(category j)) summed over the categories of the variable.
               )
               
               
+      )}
+    else if (row.names(DataRow1()) == 'Yule\'s Y (Coefficient of Colligation)') 
+    {
+      ## https://arifkamarbafadal.files.wordpress.com/2011/09/ebook-045-tutorial-spss-cross-tabulations.pdf
+      bsModal("modalExample1", paste0("Yule\'s Y (Coefficient of Colligation):"), "", size = "large",
+              h4("Description:"),
+              print(paste0("In statistics, Yule s Y, also known as the coefficient of colligation, is a measure of 
+association between two binary variables. The measure was developed by George Udny Yule in 1912,and should not be confused 
+with Yule s coefficient for measuring skewness based on quartiles. Yule s Y varies from -1 to +1. -1 reflects total negative 
+correlation, +1 reflects perfect positive association while 0 reflects no association at all. These correspond to the values 
+for the more common Pearson correlation.  
+                           ")),
+              h4("Interpretation:"),
+              h5(" "),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow1()),
+              column(12,                   
+                     DT::renderDataTable(DataRow1())
+                     
+              )
+              
+              
               )}
     else
     {
@@ -3805,13 +3895,23 @@ ln(P(category j)) summed over the categories of the variable.
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -4065,6 +4165,8 @@ ln(P(category j)) summed over the categories of the variable.
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -4318,13 +4420,23 @@ ln(P(category j)) summed over the categories of the variable.
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -4578,6 +4690,8 @@ ln(P(category j)) summed over the categories of the variable.
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -4834,13 +4948,23 @@ ln(P(category j)) summed over the categories of the variable.
       false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
       false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
       false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+      ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_omission_rate = FN/(sutuntop2)
+      false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+      false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+      false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+      ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_discovery_rate = FP/(sutuntop1)
+      false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+      false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+      false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
       ## Dogru pozitif orani
       true_positiverate = TP / (satirtop1)
       ## Yanlis siniflandirma orani
       misclassification_rate = (FN + FP) / toplam
       misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
       misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
       ## Prevelans
       prevalence = (satirtop1 / toplam)
       prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -5102,6 +5226,8 @@ ln(P(category j)) summed over the categories of the variable.
       uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
       uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
       uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+      ## Yule s Y (Coefficient of colligation)
+      yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
       ## Pearson ki-kare
       pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
       pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -5526,13 +5652,23 @@ The kappa coefficient that results is referred to as PABAK (prevalence-adjusted 
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -5786,6 +5922,8 @@ The kappa coefficient that results is referred to as PABAK (prevalence-adjusted 
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -6009,13 +6147,23 @@ The kappa coefficient that results is referred to as PABAK (prevalence-adjusted 
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -6269,6 +6417,8 @@ The kappa coefficient that results is referred to as PABAK (prevalence-adjusted 
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -6494,13 +6644,23 @@ The kappa coefficient that results is referred to as PABAK (prevalence-adjusted 
       false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
       false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
       false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+      ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_omission_rate = FN/(sutuntop2)
+      false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+      false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+      false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+      ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_discovery_rate = FP/(sutuntop1)
+      false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+      false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+      false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
       ## Dogru pozitif orani
       true_positiverate = TP / (satirtop1)
       ## Yanlis siniflandirma orani
       misclassification_rate = (FN + FP) / toplam
       misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
       misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
       ## Prevelans
       prevalence = (satirtop1 / toplam)
       prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -6754,6 +6914,8 @@ The kappa coefficient that results is referred to as PABAK (prevalence-adjusted 
       uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
       uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
       uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+      ## Yule s Y (Coefficient of colligation)
+      yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
       ## Pearson ki-kare
       pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
       pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -7110,154 +7272,152 @@ cases where the difference between the two percentages in the dependent samples 
       tarantula = (a*(c+d)) / (c*(a+b))
       ample = abs((a*(c+d)) / (c*(a+b)))
       
-     
-      verim <- data.frame(Measure = round(jaccard, digit=3))
-      newRow <- data.frame(Measure = round(dice, digit=3))
+     ## EstimateMeasure = percent(round(jaccard, digit=3))
+      verim <- data.frame(Measure = format(round(jaccard, digit=3),nsmall=3),MeasurePercent = percent(round(jaccard, digit=3)))
+      newRow <- data.frame(Measure = format(round(czekanowski, digit=3),nsmall=3),MeasurePercent = percent(round(czekanowski, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure = format(round(czekanowski, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(w3_jaccard, digit=3),nsmall=3),MeasurePercent = percent(round(w3_jaccard, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(w3_jaccard, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(nei_li, digit=3),nsmall=3),MeasurePercent = percent(round(nei_li, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(nei_li, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sokal_sneath_1, digit=3),nsmall=3),MeasurePercent = percent(round(sokal_sneath_1, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sokal_sneath_1, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sokal_michener, digit=3),nsmall=3),MeasurePercent = percent(round(sokal_michener, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sokal_michener, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sokal_sneath_2, digit=3),nsmall=3),MeasurePercent = percent(round(sokal_sneath_2, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sokal_sneath_2, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(roger_tanimoto, digit=3),nsmall=3),MeasurePercent = percent(round(roger_tanimoto, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(roger_tanimoto, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(faith, digit=3),nsmall=3),MeasurePercent = percent(round(faith, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(faith, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(gower_legendre, digit=3),nsmall=3),MeasurePercent = percent(round(gower_legendre, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(gower_legendre, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(intersection, digit=3),nsmall=3),MeasurePercent = percent(round(intersection, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(intersection, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(innerproduct, digit=3),nsmall=3),MeasurePercent = percent(round(innerproduct, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(innerproduct, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(russell_rao, digit=3),nsmall=3),MeasurePercent = percent(round(russell_rao, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(russell_rao, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_hamming, digit=3),nsmall=3),MeasurePercent = percent(round(d_hamming, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_hamming, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_euclid, digit=3),nsmall=3),MeasurePercent = percent(round(d_euclid, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_euclid, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_squared_euclid, digit=3),nsmall=3),MeasurePercent = percent(round(d_squared_euclid, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_squared_euclid, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_canberra, digit=3),nsmall=3),MeasurePercent = percent(round(d_canberra, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_canberra, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_manhattan, digit=3),nsmall=3),MeasurePercent = percent(round(d_manhattan, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_manhattan, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_mean_manhattan, digit=3),nsmall=3),MeasurePercent = percent(round(d_mean_manhattan, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_mean_manhattan, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_cityblock, digit=3),nsmall=3),MeasurePercent = percent(round(d_cityblock, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_cityblock, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_minkowski, digit=3),nsmall=3),MeasurePercent = percent(round(d_minkowski, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_minkowski, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_vari, digit=3),nsmall=3),MeasurePercent = percent(round(d_vari, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_vari, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_sizedifference, digit=3),nsmall=3),MeasurePercent = percent(round(d_sizedifference, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_sizedifference, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_shapedifference, digit=3),nsmall=3),MeasurePercent = percent(round(d_shapedifference, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_shapedifference, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_patterndifference, digit=3),nsmall=3),MeasurePercent = percent(round(d_patterndifference, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_patterndifference, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_lance_williams, digit=3),nsmall=3),MeasurePercent = percent(round(d_lance_williams, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_lance_williams, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_bray_curtis, digit=3),nsmall=3),MeasurePercent = percent(round(d_bray_curtis, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_bray_curtis, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_hellinger, digit=3),nsmall=3),MeasurePercent = percent(round(d_hellinger, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_hellinger, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_chord, digit=3),nsmall=3),MeasurePercent = percent(round(d_chord, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_chord, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(cosine, digit=3),nsmall=3),MeasurePercent = percent(round(cosine, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(cosine, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(gilbert_wells, digit=3),nsmall=3),MeasurePercent = percent(round(gilbert_wells, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(gilbert_wells, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(ochiai_1, digit=3),nsmall=3),MeasurePercent = percent(round(ochiai_1, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(ochiai_1, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(forbesi, digit=3),nsmall=3),MeasurePercent = percent(round(forbesi, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(forbesi, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(fossum, digit=3),nsmall=3),MeasurePercent = percent(round(fossum, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(fossum, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sorgenfrei, digit=3),nsmall=3),MeasurePercent = percent(round(sorgenfrei, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sorgenfrei, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(mountford, digit=3),nsmall=3),MeasurePercent = percent(round(mountford, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(mountford, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(otsuka, digit=3),nsmall=3),MeasurePercent = percent(round(otsuka, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(otsuka, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(mcconnaughey, digit=3),nsmall=3),MeasurePercent = percent(round(mcconnaughey, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(mcconnaughey, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(tarwid, digit=3),nsmall=3),MeasurePercent = percent(round(tarwid, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(tarwid, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(kulczynski_2, digit=3),nsmall=3),MeasurePercent = percent(round(kulczynski_2, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(kulczynski_2, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(driver_kroeber, digit=3),nsmall=3),MeasurePercent = percent(round(driver_kroeber, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(driver_kroeber, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(johnson, digit=3),nsmall=3),MeasurePercent = percent(round(johnson, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(johnson, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(dennis, digit=3),nsmall=3),MeasurePercent = percent(round(dennis, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(dennis, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(simpson, digit=3),nsmall=3),MeasurePercent = percent(round(simpson, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(simpson, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(braun_banquet, digit=3),nsmall=3),MeasurePercent = percent(round(braun_banquet, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(braun_banquet, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(fager_mcgowan, digit=3),nsmall=3),MeasurePercent = percent(round(fager_mcgowan, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(fager_mcgowan, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(forbes_2, digit=3),nsmall=3),MeasurePercent = percent(round(forbes_2, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(forbes_2, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sokal_sneath_4, digit=3),nsmall=3),MeasurePercent = percent(round(sokal_sneath_4, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sokal_sneath_4, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(gower, digit=3),nsmall=3),MeasurePercent = percent(round(gower, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(gower, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(pearson_heron_1, digit=3),nsmall=3),MeasurePercent = percent(round(pearson_heron_1, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(pearson_heron_1, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(pearson_heron_2, digit=3),nsmall=3),MeasurePercent = percent(round(pearson_heron_2, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(pearson_heron_2, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sokal_sneath_3, digit=3),nsmall=3),MeasurePercent = percent(round(sokal_sneath_3, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sokal_sneath_3, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(sokal_sneath_5, digit=3),nsmall=3),MeasurePercent = percent(round(sokal_sneath_5, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(sokal_sneath_5, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(cole, digit=3),nsmall=3),MeasurePercent = percent(round(cole, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(cole, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(stiles, digit=3),nsmall=3),MeasurePercent = percent(round(stiles, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(stiles, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(ochiai_2, digit=3),nsmall=3),MeasurePercent = percent(round(ochiai_2, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(ochiai_2, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(yuleq, digit=3),nsmall=3),MeasurePercent = percent(round(yuleq, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(yuleq, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(d_yuleq, digit=3),nsmall=3),MeasurePercent = percent(round(d_yuleq, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(d_yuleq, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(yulew, digit=3),nsmall=3),MeasurePercent = percent(round(yulew, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(yulew, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(kulczynski_1, digit=3),nsmall=3),MeasurePercent = percent(round(kulczynski_1, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(kulczynski_1, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(tanimoto, digit=3),nsmall=3),MeasurePercent = percent(round(tanimoto, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(tanimoto, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(disperson, digit=3),nsmall=3),MeasurePercent = percent(round(disperson, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(disperson, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(hamann, digit=3),nsmall=3),MeasurePercent = percent(round(hamann, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(hamann, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(michael, digit=3),nsmall=3),MeasurePercent = percent(round(michael, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(michael, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(goodman_kruskal, digit=3),nsmall=3),MeasurePercent = percent(round(goodman_kruskal, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(goodman_kruskal, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(anderberg, digit=3),nsmall=3),MeasurePercent = percent(round(anderberg, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(anderberg, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(baroni_urbani_buser_1, digit=3),nsmall=3),MeasurePercent = percent(round(baroni_urbani_buser_1, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(baroni_urbani_buser_1, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(baroni_urbani_buser_2, digit=3),nsmall=3),MeasurePercent = percent(round(baroni_urbani_buser_2, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(baroni_urbani_buser_2, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(peirce, digit=3),nsmall=3),MeasurePercent = percent(round(peirce, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(peirce, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(eyraud, digit=3),nsmall=3),MeasurePercent = percent(round(eyraud, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(eyraud, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(tarantula, digit=3),nsmall=3),MeasurePercent = percent(round(tarantula, digit=3)))
       verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(tarantula, digit=3),nsmall=3))
-      verim <- rbind(verim,newRow)
-      newRow <- data.frame(Measure=format(round(ample, digit=3),nsmall=3))
+      newRow <- data.frame(Measure=format(round(ample, digit=3),nsmall=3),MeasurePercent = percent(round(ample, digit=3)))
       verim <- rbind(verim,newRow)
       
-      rownames(verim) <- c("Jaccard (Similarity)", "Dice (Similarity)", "Czekanowski (Similarity)", "3w Jaccard (Similarity)", "Nei&Li (Similarity)",
+      rownames(verim) <- c("Jaccard (Similarity)", "Czekanowski (Dice) (Similarity)", "3w Jaccard (Similarity)", "Nei&Li (Similarity)",
                            "Sokal&Sneath-1 (Similarity)", "Sokal&Michener (Similarity)", "Sokal&Sneath-2 (Similarity)", "Roger&Tanimoto (Similarity)",
                            "Faith (Similarity)", "Gower&Legendre (Similarity)", "Intersection (Similarity)", "Innerproduct (Similarity)", "Russell&Rao (Similarity)",
                            "Hamming (Distance)", "Euclid (Distance)", "Squared-Euclid (Distance)", "Canberra (Distance)", "Manhattan (Distance)",
@@ -7310,17 +7470,502 @@ cases where the difference between the two percentages in the dependent samples 
   })
   
   output$popup4 <- renderUI({
+     if (rownames(DataRow4()) == 'Jaccard (Similarity)') 
+    {
+       ## http://www.statisticshowto.com/jaccard-index/
+      bsModal("modalExample4", paste0("Jaccard (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The Jaccard similarity index -sometimes called the Jaccard similarity coefficient- compares members 
+                           for two sets to see which members are shared and which are distinct. It is a measure of similarity for 
+                           the two sets of data, with a range from 0% to 100%. The higher the percentage, the more similar the two 
+                           populations. Although it is easy to interpret, it is extremely sensitive to small samples sizes and may 
+                           give erroneous results, especially with very small samples or data sets with missing observations.
+                           This is an index in which joint absences are excluded from consideration. Equal weight is given to matches and nonmatches. Also known as the similarity ratio.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Czekanowski (Dice) (Similarity)') 
+    {
+      ## http://www.int-res.com/articles/meps/5/m005p125.pdf
+      bsModal("modalExample4", paste0("Czekanowski (Dice) (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("Since the term Czekanowski s Index is often used in marine studies and should be distinguished 
+                           from the qualitative presence,absence form of the expression, 
+                           it will be referred to here as,Czekanowski s Quantitative Index. 
+                           The Czekanowski index, also known by other names like Sorensen Dice index,F1 score or Dice similarity coefficient, 
+                           is a statistic used for comparing the similarity of two samples.This is an index in which joint absences are excluded from consideration, and matches are weighted double.
+This coefficient is not very different in form from the Jaccard index. 
+                           In fact, both are equivalent in the sense that given a value for the Sorensen Dice coefficient, 
+                           one can calculate the respective Jaccard index value J and vice versa.
+                           Since the Sorensen Dice coefficient does not satisfy the triangle inequality, it can be 
+                           considered a semimetric version of the Jaccard index. ")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Nei&Li (Similarity)') 
+    {
+      ## http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.458.8335&rep=rep1&type=pdf
+      bsModal("modalExample4", paste0("Nei&Li (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("Nei & Li (Similarity) has the same calculation and interpretation as the Czekanowski (Dice) measurement.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Sokal&Sneath-1 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Sokal&Sneath-1 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This is an index in which double weight is given to matches.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Sokal&Sneath-2 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Sokal&Sneath-2 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This is an index in which double weight is given to nonmatches, and joint absences are excluded from consideration.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Sokal&Sneath-3 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Sokal&Sneath-3 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This is the ratio of matches to nonmatches. This index has a lower bound of 0 and is unbounded 
+                           above. It is theoretically undefined when there are no nonmatches; however, Distances assigns 
+                           an arbitrary value of 9999.999 when the value is undefined or is greater than this value.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Russell&Rao (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Russell&Rao (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This is a binary version of the inner (dot) product. Equal weight is given to matches and 
+                           nonmatches. This is the default for binary similarity data.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Roger&Tanimoto (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Roger&Tanimoto (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This is an index in which double weight is given to nonmatches.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Kulczynski-1 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Kulczynski-1 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("his is the ratio of joint presences to all nonmatches. This index has a lower bound of 0 and is unbounded above. It is theoretically undefined when there are no nonmatches; however, Distances assigns an arbitrary value of 9999.999 when the value is undefined or is greater than this value.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Kulczynski-2 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Kulczynski-2 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0(" This index is based on the conditional probability that the characteristic is present in one item, given that it is present in the other. The separate values for each item acting as predictor of the other are averaged to compute this value.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Sokal&Sneath-4 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Sokal&Sneath-4 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This index is based on the conditional probability that the characteristic in one item matches the value in the other. The separate values for each item acting as predictor of the other are averaged to compute this value.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Hamann (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Hamann (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This index is the number of matches minus the number of nonmatches, divided by the total number of items. It ranges from -1 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Anderberg (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Anderberg (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("Similar to lambda, this index corresponds to the actual reduction of error using one item to predict the other (predicting in both directions). Values range from 0 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Ochiai-1 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Ochiai-1 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This index is the binary form of the cosine similarity measure. It has a range of 0 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Ochiai-2 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Ochiai-2 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This index is the binary form of the cosine similarity measure. It has a range of 0 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Sokal&Sneath-5 (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Sokal&Sneath-5 (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This index is the squared geometric mean of conditional probabilities of positive and negative matches. It is independent of item coding. It has a range of 0 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Disperson (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Disperson (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This index has a range of -1 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Lance&Williams (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Lance&Williams (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("Computed from a fourfold table as (FN+FP)/(2*TP+FN+FP), where a represents the cell corresponding 
+                           to cases present on both items, and FN and FP represent the diagonal cells corresponding to 
+                           cases present on one item but absent on the other. This measure has a range of 0 to 1. 
+                           Also known as the Bray-Curtis nonmetric coefficient.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Sizedifference (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Sizedifference (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("An index of asymmetry. It ranges from 0 to 1.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Shapedifference (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Shapedifference (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("This distance measure has a range of 0 to 1, and it penalizes asymmetry of mismatches.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Patterndifference (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Patterndifference (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("Dissimilarity measure for binary data that ranges from 0 to 1. Computed from a fourfold table as 
+                           bc/(n**2), where b and c represent the diagonal cells corresponding to cases present on one item but absent on the other and n is the total number of observations.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Minkowski (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Minkowski (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The pth root of the sum of the absolute differences to the pth power between the values for the items.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Cityblock (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Cityblock (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The sum of the absolute differences between the values of the item. Also known as Manhattan distance.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Squared-Euclid (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Squared-Euclid (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The sum of the squared differences between the values for the items.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Euclid (Distance)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Euclid (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The square root of the sum of the squared differences between values for the items. This is the default for interval data.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Cosine (Similarity)') 
+    {
+      ## https://www.ibm.com/support/knowledgecenter/en/SSLVMB_23.0.0/spss/base/cmd_proximities_sim_measure_binary.html
+      bsModal("modalExample4", paste0("Cosine (Similarity): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The cosine of the angle between two vectors of values.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Canberra (Distance)') 
+    {
+      ## http://people.revoledu.com/kardi/tutorial/Similarity/CanberraDistance.html
+      bsModal("modalExample4", paste0("Canberra (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("Canberra distance examines the sum of series of a fraction differences
+                           between coordinates of a pair of objects. Each term of fraction difference 
+                           has value between 0 and 1. The Canberra distance itself is not between zero and one.
+                           If one of coordinate is zero, the term become unity regardless the other value,
+                           thus the distance will not be affected. Note that if both coordinate are zeros,
+                           we need to be defined as 0/0=0. This distance is very sensitive to a small change 
+                           when both coordinate near to zero.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+      )}
+    else if (rownames(DataRow4()) == 'Cityblock (Distance)') 
+    {
+      ## https://docs.tibco.com/pub/spotfire/7.0.0/doc/html/hc/hc_city_block_distance.htm
+      bsModal("modalExample4", paste0("Cityblock (Distance): "), "", size = "large",
+              h4("Description:"),
+              print(paste0("The City block distance is always greater than or equal to zero. The measurement would be zero for identical points and high for points that show little similarity.
+                           In most cases, this distance measure yields results similar to the Euclidean distance. 
+Note, however, that with City block distance, the effect of a large difference in a single dimension is dampened 
+(since the distances are not squared).The name City block distance (also referred to as Manhattan distance) is explained 
+                           if you consider two points in the xy-plane. The shortest distance between the two points is along 
+                           the hypotenuse, which is the Euclidean distance. The City block distance is instead calculated as 
+                           the distance in x plus the distance in y, which is similar to the way you move in a city (like Manhattan) 
+                           where you have to move around the buildings instead of going straight through.")),
+              h4("Interpretation:"),
+              h5("The",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4()$Measure,"."),
+              h5("**************************************************************************************************************************************************"),
+              h5("Data for Row Number:",SelectedRow4()),
+              column(12,                   
+                     DT::renderDataTable(DataRow4())
+                     
+              )
+              
+              )}
+    else
+      {
     bsModal("modalExample4", paste0("Interpretation: "), "", size = "large",
-            print(paste0(rownames(DataRow4())," measure is ", DataRow4()$Measure)),
+            print(paste0("The ",rownames(DataRow4())," distance between actual situation and clinical test result is ",DataRow4(),".")),
             h5("**************************************************************************************************************************************************"),
             h5("Data for Row Number:",SelectedRow4()),
             column(12,                   
                    DT::renderDataTable(DataRow4())
                    
-            )
+           )
             
             
     )
+    }
   })
 
   output$plot4 <- highcharter::renderHighchart({
@@ -8002,13 +8647,23 @@ cases where the difference between the two percentages in the dependent samples 
       false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
       false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
       false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+      ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_omission_rate = FN/(sutuntop2)
+      false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+      false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+      false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+      ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+      false_discovery_rate = FP/(sutuntop1)
+      false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+      false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+      false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
       ## Dogru pozitif orani
       true_positiverate = TP / (satirtop1)
       ## Yanlis siniflandirma orani
       misclassification_rate = (FN + FP) / toplam
       misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
       misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+      misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
       ## Prevelans
       prevalence = (satirtop1 / toplam)
       prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -8071,8 +8726,8 @@ cases where the difference between the two percentages in the dependent samples 
       ## Pozitif Olabilirlik Orani
       likelihoodratio_positivetest = sensitivity_estimate/(1-specificity)
       likelihoodratio_positivetest_se = exp(sqrt((1-sensitivity_estimate)/(sensitivity_estimate*satirtop1) +specificity/((1-specificity)*satirtop2)))
-      likelihoodratio_positivetest_low = exp(log(likelihoodratio_positivetest) - qnorm((1 - CI/100)/2)*log(likelihoodratio_positivetest_se))
-      likelihoodratio_positivetest_upp = exp(log(likelihoodratio_positivetest) + qnorm((1 - CI/100)/2)*log(likelihoodratio_positivetest_se))
+      likelihoodratio_positivetest_low = exp(log(likelihoodratio_positivetest) + qnorm((1 - CI/100)/2)*log(likelihoodratio_positivetest_se))
+      likelihoodratio_positivetest_upp = exp(log(likelihoodratio_positivetest) - qnorm((1 - CI/100)/2)*log(likelihoodratio_positivetest_se))
       ## post-test odds
       ## http://www.fpnotebook.com/Prevent/Epi/PrTstOds.htm
       posttest_odds = pretest_odds * likelihoodratio_positivetest
@@ -8272,6 +8927,8 @@ cases where the difference between the two percentages in the dependent samples 
       uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
       uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
       uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+      ## Yule s Y (Coefficient of colligation)
+      yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
       ## Pearson ki-kare
       pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
       pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -8856,13 +9513,23 @@ the incidence of a disease in the population (exposed and nonexposed)
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -9116,6 +9783,8 @@ the incidence of a disease in the population (exposed and nonexposed)
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
@@ -9418,13 +10087,23 @@ the incidence of a disease in the population (exposed and nonexposed)
     false_negativerate_se = sqrt(false_negativerate*(1-false_negativerate)/satirtop1)
     false_negativerate_low = 1 - Rbeta.inv((1 + CI/100)/2, (satirtop1+1-FN),FN)
     false_negativerate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (satirtop1-FN))
+    ## False Omission Rate (FOR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_omission_rate = FN/(sutuntop2)
+    false_omission_rate_se = sqrt(false_omission_rate*(1-false_omission_rate)/sutuntop2)
+    false_omission_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop2+1-FN),FN)
+    false_omission_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+1), (sutuntop2-FN))
+    ## False Discovery Rate (FDR) https://www.ncss.com/software/ncss/diagnostic-tests-in-ncss/
+    false_discovery_rate = FP/(sutuntop1)
+    false_discovery_rate_se = sqrt(false_discovery_rate*(1-false_discovery_rate)/sutuntop1)
+    false_discovery_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (sutuntop1+1-FP),FP)
+    false_discovery_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+1), (sutuntop1-FP))
     ## Dogru pozitif orani
     true_positiverate = TP / (satirtop1)
     ## Yanlis siniflandirma orani
     misclassification_rate = (FN + FP) / toplam
     misclassification_rate_se = sqrt(misclassification_rate*(1-misclassification_rate)/toplam)
     misclassification_rate_low = 1 - Rbeta.inv((1 + CI/100)/2, (toplam+1-FP-FN), (FP+FN))
-    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FN+FN+1), (toplam-FP-FN))
+    misclassification_rate_upp = Rbeta.inv((1 + CI/100)/2, (FP+FN+1), (toplam-FP-FN))
     ## Prevelans
     prevalence = (satirtop1 / toplam)
     prevalence_se = sqrt((satirtop1 / toplam)*(1-(satirtop1 / toplam))/toplam)
@@ -9678,6 +10357,8 @@ the incidence of a disease in the population (exposed and nonexposed)
     uncertainty_coeff_crit_se_2 = sqrt(TP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TP/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FP*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FP/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop1/toplam))^2+FN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(FN/satirtop1)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2+TN*(-(sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam*log(TN/satirtop2)+(-(satirtop1*log(satirtop1/toplam)+satirtop2*log(satirtop2/toplam))/toplam+(TP*log(TP/toplam)+FP*log(FP/toplam)+FN*log(FN/toplam)+TN*log(TN/toplam))/toplam)*log(sutuntop2/toplam))^2)/toplam/((sutuntop1*log(sutuntop1/toplam)+sutuntop2*log(sutuntop2/toplam))/toplam)^2
     uncertainty_coeff_crit_low_2 = uncertainty_coeff_crit_2 + qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
     uncertainty_coeff_crit_upp_2 = uncertainty_coeff_crit_2 - qnorm((1-CI/100)/2)*uncertainty_coeff_crit_se_2
+    ## Yule s Y (Coefficient of colligation)
+    yule_y = (sqrt(TP*TN)-sqrt(FN*FP))/(sqrt(TP*TN)+sqrt(FN*FP))
     ## Pearson ki-kare
     pearson_chi_squ = toplam*(TP*TN-FN*FP)^2/(satirtop1*satirtop2*sutuntop1*sutuntop2)
     pearson_chi_squ_p = dchi(pearson_chi_squ, df=1)
